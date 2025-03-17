@@ -16,7 +16,7 @@ local function ondeploy(inst, pt, deployer)
         structure.Transform:SetPosition(pt:Get())
         inst:Remove() -- Remove the item after deployment
     end
-end 
+end
 
 -- local function ondeploy(inst, pt, deployer)
 --     local pot = SpawnPrefab("painmagnet", inst.linked_skinname, inst.skin_id )
@@ -47,6 +47,7 @@ local function itemfn()
     inst.AnimState:SetBuild("painmagnet_item")
     inst.AnimState:PlayAnimation("idle")
 
+    inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
@@ -56,6 +57,7 @@ local function itemfn()
     inst.components.inventoryitem.imagename = "inventoryicon"
     inst.components.inventoryitem.atlasname = "images/inventoryimages/inventoryicon.xml"
 
+    inst:AddTag("deploykititem")
     inst:AddComponent("deployable")
     inst.components.deployable.ondeploy = ondeploy
     inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
@@ -70,8 +72,8 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-    MakeObstaclePhysics(inst, 1)
-    
+    MakeObstaclePhysics(inst, 1, 3)
+
     inst:AddTag("structure")
 
     inst.AnimState:SetBank("painmagnet")

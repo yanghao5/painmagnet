@@ -33,7 +33,7 @@ AddRecipe2("painmagnet_item",
         atlas = "images/inventoryimages/inventoryicon.xml",
         image = "inventoryicon.tex" 
     },
-    {"MAGIC"}
+    {"MAGIC", "STRUCTURES"}
 )
 
 -- Pain Magnet item

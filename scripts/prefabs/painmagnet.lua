@@ -77,14 +77,18 @@ local function onhammered(inst, worker)
     inst:Remove()
 end
 
+local PAINMAGNET_HEALTH=100000
+local PAINMAGNET_REGEN=1
+
 -- painmagnet
 local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
+    inst.entity:AddSoundEmitter()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-    MakeObstaclePhysics(inst, 1, 3)
+    MakeObstaclePhysics(inst, 2)
 
     inst:AddTag("structure")
 
@@ -92,13 +96,17 @@ local function fn()
     inst.AnimState:SetBuild("painmagnet")
     inst.AnimState:PlayAnimation("idle")
 
+    inst:AddComponent("inspectable")
+
+    inst:AddComponent("health")
+    inst.components.health:SetMaxHealth(PAINMAGNET_HEALTH)
+    inst.components.health:StartRegen(PAINMAGNET_REGEN, 1)
+
+    inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
 
-    inst:AddComponent("inspectable")
-
-    inst.entity:AddSoundEmitter()
     inst:AddComponent("lootdropper")
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)

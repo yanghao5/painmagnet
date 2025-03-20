@@ -1,4 +1,5 @@
 require "prefabutil"
+local containers = require("containers")
 
 GLOBAL.setmetatable(env, {
     __index = function(t, k)
@@ -35,6 +36,30 @@ AddRecipe2("painmagnet_item",
     },
     {"MAGIC", "STRUCTURES"}
 )
+
+local params = {
+    widget = {
+        slotpos = {},
+        animbank = "ui_chest_4x5",
+        animbuild = "ui_chest_4x5",
+        pos = Vector3(0, 200, 0),
+        side_align_tip = 160,
+    },
+    type = "chest",
+    itemtestfn = function(container, item, slot) 
+        return item.components.edible ~= nil
+    end
+}
+
+for y = 3, 0, -1 do -- slot_y = 3
+    for x = 0, 4 do -- slot_x = 4
+        table.insert(params.widget.slotpos, Vector3(80 * x - 346 * 2 + 90, 80 * y - 100 * 2 + 130, 0))
+    end
+end
+
+containers.params.painmagnet_storage = params
+
+containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, #params.widget.slotpos)
 
 -- Pain Magnet item
 GLOBAL.STRINGS.NAMES.PAINMAGNET_ITEM = "Pain Magnet"

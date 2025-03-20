@@ -7,7 +7,8 @@ local itemassets = {
     Asset("IMAGE", "images/inventoryimages/inventoryicon.tex")
 }
 local assets = {
-    Asset("ANIM", "anim/painmagnet.zip")
+    Asset("ANIM", "anim/painmagnet.zip"),
+    Asset("ANIM","anim/ui_chest_4x5.zip")
 }
 
 local PAINMAGNET_HEALTH=100000
@@ -121,6 +122,7 @@ local function fn()
     end
 
     inst:AddTag("structure")
+    inst:AddTag("container")
 
     inst:AddComponent("inspectable")
 
@@ -136,6 +138,15 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(4) 
     inst.components.workable:SetOnFinishCallback(onhammered)
+
+    inst:AddComponent("container")
+    inst.components.container:WidgetSetup("painmagnet_storage")
+    inst.components.container.onopenfn = function(inst)
+        inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_open")
+    end
+    inst.components.container.onclosefn = function(inst)
+        inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_close")
+    end
 
     -- local function turnon(inst)
     --     inst:Remove()

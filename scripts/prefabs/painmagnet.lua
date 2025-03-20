@@ -88,16 +88,18 @@ local function StartAggroTask(inst)
 end
 
 -- painmagnet onhammered
--- local function onhammered(inst, worker)
---     for i = 1, 4 do
---         inst.components.lootdropper:SpawnLootPrefab("nightmarefuel")
---     end
---     local fx = SpawnPrefab("collapse_small")
---     fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
---     fx:SetMaterial("wood")
---     inst.SoundEmitter:PlaySound("dontstarve/common/destroy_wood")
---     inst:Remove()
--- end
+local function onhammered(inst, worker)
+    if worker and worker:HasTag("player") then
+        for i = 1, 4 do
+            inst.components.lootdropper:SpawnLootPrefab("nightmarefuel")
+        end
+        local fx = SpawnPrefab("collapse_small")
+        fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        fx:SetMaterial("wood")
+        inst.SoundEmitter:PlaySound("dontstarve/common/destroy_wood")
+        inst:Remove()
+    end
+end
 
 -- painmagnet
 local function fn()
@@ -129,11 +131,11 @@ local function fn()
     inst:AddComponent("combat")
     StartAggroTask(inst)
 
-    -- inst:AddComponent("lootdropper")
-    -- inst:AddComponent("workable")
-    -- inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    -- inst.components.workable:SetWorkLeft(4) 
-    -- inst.components.workable:SetOnFinishCallback(onhammered)
+    inst:AddComponent("lootdropper")
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    inst.components.workable:SetWorkLeft(4) 
+    inst.components.workable:SetOnFinishCallback(onhammered)
 
     -- local function turnon(inst)
     --     inst:Remove()

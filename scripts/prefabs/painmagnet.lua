@@ -18,20 +18,6 @@ local function ondeploy(inst, pt, deployer)
     end
 end
 
--- local function ondeploy(inst, pt, deployer)
---     local pot = SpawnPrefab("painmagnet", inst.linked_skinname, inst.skin_id )
---     if pot ~= nil then
---         pot.Physics:SetCollides(false)
---         pot.Physics:Teleport(pt.x, 0, pt.z)
---         pot.Physics:SetCollides(true)
---         pot.AnimState:PlayAnimation("place")
---         pot.AnimState:PushAnimation("idle_empty", false)
---         -- pot.SoundEmitter:PlaySound("dontstarve/common/together/portable/cookpot/place")
---         inst:Remove()
---         PreventCharacterCollisionsWithPlacedObjects(pot)
---     end
--- end
-
 -- painmagnet_item
 local function itemfn()
     local inst = CreateEntity()

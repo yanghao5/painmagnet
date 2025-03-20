@@ -52,16 +52,16 @@ local function itemfn()
 end
 
 -- painmagnet onhammered
-local function onhammered(inst, worker)
-    for i = 1, 4 do
-        inst.components.lootdropper:SpawnLootPrefab("nightmarefuel")
-    end
-    local fx = SpawnPrefab("collapse_small")
-    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
-    fx:SetMaterial("wood")
-    inst.SoundEmitter:PlaySound("dontstarve/common/destroy_wood")
-    inst:Remove()
-end
+-- local function onhammered(inst, worker)
+--     for i = 1, 4 do
+--         inst.components.lootdropper:SpawnLootPrefab("nightmarefuel")
+--     end
+--     local fx = SpawnPrefab("collapse_small")
+--     fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+--     fx:SetMaterial("wood")
+--     inst.SoundEmitter:PlaySound("dontstarve/common/destroy_wood")
+--     inst:Remove()
+-- end
 
 local PAINMAGNET_HEALTH=100000
 local PAINMAGNET_REGEN=1
@@ -93,11 +93,11 @@ local function fn()
     inst.components.health:SetMaxHealth(PAINMAGNET_HEALTH)
     inst.components.health:StartRegen(PAINMAGNET_REGEN, 1)
 
-    inst:AddComponent("lootdropper")
-    inst:AddComponent("workable")
-    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    inst.components.workable:SetWorkLeft(4) 
-    inst.components.workable:SetOnFinishCallback(onhammered)
+    -- inst:AddComponent("lootdropper")
+    -- inst:AddComponent("workable")
+    -- inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    -- inst.components.workable:SetWorkLeft(4) 
+    -- inst.components.workable:SetOnFinishCallback(onhammered)
 
     -- local function turnon(inst)
     --     inst:Remove()

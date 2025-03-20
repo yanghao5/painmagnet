@@ -76,22 +76,22 @@ local function fn()
 
     MakeObstaclePhysics(inst, 2)
 
-    inst:AddTag("structure")
-
     inst.AnimState:SetBank("painmagnet")
     inst.AnimState:SetBuild("painmagnet")
     inst.AnimState:PlayAnimation("idle")
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddTag("structure")
 
     inst:AddComponent("inspectable")
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(PAINMAGNET_HEALTH)
     inst.components.health:StartRegen(PAINMAGNET_REGEN, 1)
-
-    inst.entity:SetPristine()
-    if not TheWorld.ismastersim then
-        return inst
-    end
 
     inst:AddComponent("lootdropper")
     inst:AddComponent("workable")

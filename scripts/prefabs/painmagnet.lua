@@ -74,7 +74,7 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-    MakeObstaclePhysics(inst, 2)
+    MakeObstaclePhysics(inst, 1)
 
     inst.AnimState:SetBank("painmagnet")
     inst.AnimState:SetBuild("painmagnet")

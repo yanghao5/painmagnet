@@ -9,6 +9,14 @@ local itemassets = {
 local assets = {
     Asset("ANIM", "anim/painmagnet.zip")
 }
+
+local PAINMAGNET_HEALTH=100000
+local PAINMAGNET_REGEN=1
+local PAINMAGNET_RANGE=35
+local PAINMAGNET_DAMAGE=20
+local PAINMAGNET_ATTACK_PERIOD=1
+local PAINMAGNET_DAMAGE_REDUCTION=0.3
+
 -- painmagnet_item ondeploy
 local function ondeploy(inst, pt, deployer)
     local structure = SpawnPrefab("painmagnet")
@@ -51,6 +59,34 @@ local function itemfn()
     return inst
 end
 
+local AGGRO_MUST_TAGS = { "_combat" }
+local AGGRO_CANT_TAGS = { "INLIMBO", "player", "eyeturret", "engineering" }
+-- painmagnet AttractAggro()
+local function AttractAggro(inst)
+    print("Starting aggro task.")
+    if not inst.components.combat then
+        return
+    end
+
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local range = PAINMAGNET_RANGE or 15
+
+    local ents = TheSim:FindEntities(x, y, z, range, AGGRO_MUST_TAGS, AGGRO_CANT_TAGS)
+    for i, v in ipairs(ents) do
+        if v:IsValid() and v.components.combat and inst.components.combat:CanTarget(v) then
+            v.components.combat:GiveUp()
+            v.components.combat:SetTarget(inst)
+            v.components.health:DoDelta(-PAINMAGNET_DAMAGE, nil, "painmagnet")
+        end
+    end
+end
+
+
+local function StartAggroTask(inst)
+    local period = PAINMAGNET_ATTACK_PERIOD or 5
+    inst:DoPeriodicTask(period, AttractAggro)
+end
+
 -- painmagnet onhammered
 -- local function onhammered(inst, worker)
 --     for i = 1, 4 do
@@ -62,9 +98,6 @@ end
 --     inst.SoundEmitter:PlaySound("dontstarve/common/destroy_wood")
 --     inst:Remove()
 -- end
-
-local PAINMAGNET_HEALTH=100000
-local PAINMAGNET_REGEN=1
 
 -- painmagnet
 local function fn()
@@ -92,6 +125,9 @@ local function fn()
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(PAINMAGNET_HEALTH)
     inst.components.health:StartRegen(PAINMAGNET_REGEN, 1)
+
+    inst:AddComponent("combat")
+    StartAggroTask(inst)
 
     -- inst:AddComponent("lootdropper")
     -- inst:AddComponent("workable")

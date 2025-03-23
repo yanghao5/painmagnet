@@ -23,14 +23,10 @@ PrefabFiles = {
 
 AddRecipe2("painmagnet_item",
     {
-        --Ingredient("monstermeat", 10),
-        --Ingredient("meat", 10),
-        --Ingredient("log", 30),
         Ingredient("nightmarefuel", 5)
     },
     TECH.SCIENCE_ONE,
     {
-        -- placer = "painmagnet_placer",
         atlas = "images/inventoryimages/inventoryicon.xml",
         image = "inventoryicon.tex" 
     },
@@ -47,7 +43,12 @@ local params = {
     },
     type = "chest",
     itemtestfn = function(container, item, slot) 
-        return item.components.edible ~= nil
+        if item.components.edible then
+           if  item.components.edible.foodtype == FOODTYPE.MEAT or item.components.edible.foodtype==FOODTYPE.VEGGIE then
+                return true
+            end
+        end
+        return false
     end
 }
 

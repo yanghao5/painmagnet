@@ -7,7 +7,8 @@ local itemassets = {
     Asset("IMAGE", "images/inventoryimages/inventoryicon.tex")
 }
 local assets = {
-    Asset("ANIM", "anim/painmagnet.zip")
+    Asset("ANIM", "anim/painmagnet.zip"),
+    Asset("ANIM","anim/ui_chest_4x5.zip")
 }
 
 local PAINMAGNET_HEALTH=100000
@@ -121,6 +122,7 @@ local function fn()
     end
 
     inst:AddTag("structure")
+    inst:AddTag("container")
 
     inst:AddComponent("inspectable")
 
@@ -136,6 +138,50 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(4) 
     inst.components.workable:SetOnFinishCallback(onhammered)
+
+    inst:AddComponent("container")
+    inst.components.container:WidgetSetup("painmagnet_storage")
+    inst.components.container.onopenfn = function(inst)
+        inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_open")
+    end
+    -- override GetAllItems
+    inst.components.container.GetAllItems = function(self)
+        local collected_items = {}
+        for k, v in pairs(self.slots) do
+            if v ~= nil then
+                if v.components.stackable then
+                    local stack_size = v.components.stackable:StackSize()
+                    for i = 1, stack_size do
+                        table.insert(collected_items, v)
+                    end
+                else
+                    table.insert(collected_items, v)
+                end
+            end
+        end
+        return collected_items
+    end
+    inst.components.container.onclosefn = function(inst)
+        local items = inst.components.container:GetAllItems()
+        local total_hunger = 0
+
+        for _, item in ipairs(items) do
+            if item.components.edible and item.components.edible.hungervalue then
+                if item.components.edible.hungervalue > 0 then
+                    total_hunger = total_hunger + item.components.edible.hungervalue
+                end
+            end
+
+            inst.components.container:RemoveItem(item)
+            item:Remove()
+        end
+
+        local current_health = inst.components.health.currenthealth
+        local max_health = inst.components.health.maxhealth
+        local new_health = math.min(current_health + total_hunger * 10, max_health)   -- 确保不超过最大血量
+        inst.components.health:SetCurrentHealth(new_health)
+        inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_close")
+    end
 
     -- local function turnon(inst)
     --     inst:Remove()

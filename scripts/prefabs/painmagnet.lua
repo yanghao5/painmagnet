@@ -8,15 +8,16 @@ local itemassets = {
 }
 local assets = {
     Asset("ANIM", "anim/painmagnet.zip"),
-    Asset("ANIM","anim/ui_chest_4x5.zip")
+    Asset("ANIM", "anim/ui_chest_4x5.zip")
 }
 
-local PAINMAGNET_HEALTH=100000
-local PAINMAGNET_REGEN=1
-local PAINMAGNET_RANGE=35
-local PAINMAGNET_DAMAGE=20
-local PAINMAGNET_ATTACK_PERIOD=1
-local PAINMAGNET_DAMAGE_REDUCTION=0.3
+local PAINMAGNET_HEALTH = GetModConfigData("pm_hp", KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_REGEN = 1
+local PAINMAGNET_RANGE = GetModConfigData("pm_range", KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_DAMAGE = GetModConfigData("pm_attack", KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_FOOD_HEAL_RATIO = GetModConfigData("pm_food_ratio", KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_ATTACK_PERIOD = 1
+local PAINMAGNET_DAMAGE_REDUCTION = 0.3
 
 -- painmagnet_item ondeploy
 local function ondeploy(inst, pt, deployer)
@@ -136,7 +137,7 @@ local function fn()
     inst:AddComponent("lootdropper")
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    inst.components.workable:SetWorkLeft(4) 
+    inst.components.workable:SetWorkLeft(4)
     inst.components.workable:SetOnFinishCallback(onhammered)
 
     inst:AddComponent("container")
@@ -168,7 +169,7 @@ local function fn()
         for _, item in ipairs(items) do
             if item.components.edible and item.components.edible.hungervalue then
                 if item.components.edible.hungervalue > 0 then
-                    total_hunger = total_hunger + item.components.edible.hungervalue
+                    total_hunger = total_hunger + PAINMAGNET_FOOD_HEAL_RATIO*item.components.edible.hungervalue
                 end
             end
 
@@ -178,7 +179,7 @@ local function fn()
 
         local current_health = inst.components.health.currenthealth
         local max_health = inst.components.health.maxhealth
-        local new_health = math.min(current_health + total_hunger * 10, max_health)   -- 确保不超过最大血量
+        local new_health = math.min(current_health + total_hunger * 10, max_health) -- 确保不超过最大血量
         inst.components.health:SetCurrentHealth(new_health)
         inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_close")
     end

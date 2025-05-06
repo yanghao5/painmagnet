@@ -3,7 +3,7 @@ author = "Yang Hao"
 description = [[
 Attracts monster attacks, an essential helper for solo gameplay.
 ]]
-version = "1.0.0"
+version = "1.0.1"
 dst_compatible = true
 forge_compatible = false
 gorge_compatible = false

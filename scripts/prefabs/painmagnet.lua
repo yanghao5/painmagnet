@@ -117,15 +117,16 @@ local function fn()
     inst.AnimState:SetBuild("painmagnet")
     inst.AnimState:PlayAnimation("idle")
 
-    inst.entity:SetPristine()
-    if not TheWorld.ismastersim then
-        return inst
-    end
-
     inst:AddTag("structure")
     inst:AddTag("container")
 
     inst:AddComponent("inspectable")
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        inst.OnEntityReplicated = function(inst) inst.replica.container:WidgetSetup("painmagnet") end
+        return inst
+    end
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(PAINMAGNET_HEALTH)
@@ -141,7 +142,7 @@ local function fn()
     inst.components.workable:SetOnFinishCallback(onhammered)
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("painmagnet_storage")
+    inst.components.container:WidgetSetup("painmagnet")
     inst.components.container.onopenfn = function(inst)
         inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_open")
     end

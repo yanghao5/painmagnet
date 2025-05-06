@@ -16,7 +16,7 @@ local PAINMAGNET_REGEN = 1
 local PAINMAGNET_RANGE = GetModConfigData("pm_range", KnownModIndex:GetModActualName("Pain Magnet"))
 local PAINMAGNET_DAMAGE = GetModConfigData("pm_attack", KnownModIndex:GetModActualName("Pain Magnet"))
 local PAINMAGNET_FOOD_HEAL_RATIO = GetModConfigData("pm_food_ratio", KnownModIndex:GetModActualName("Pain Magnet"))
-local PAINMAGNET_ATTACK_PERIOD = 1
+local PAINMAGNET_ATTACK_PERIOD = 0.2
 local PAINMAGNET_DAMAGE_REDUCTION = 0.3
 
 -- painmagnet_item ondeploy

@@ -62,7 +62,7 @@ local function itemfn()
 end
 
 local AGGRO_MUST_TAGS = { "_combat" }
-local AGGRO_CANT_TAGS = { "INLIMBO", "player", "eyeturret", "engineering" }
+local AGGRO_CANT_TAGS = { "INLIMBO", "player", "eyeturret", "engineering","beehive","hive","spiderden" }
 -- painmagnet AttractAggro()
 local function AttractAggro(inst)
     print("Starting aggro task.")

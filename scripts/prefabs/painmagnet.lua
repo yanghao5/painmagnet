@@ -117,16 +117,16 @@ local function fn()
     inst.AnimState:SetBuild("painmagnet")
     inst.AnimState:PlayAnimation("idle")
 
-    inst:AddTag("structure")
-    inst:AddTag("container")
-
-    inst:AddComponent("inspectable")
-
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         inst.OnEntityReplicated = function(inst) inst.replica.container:WidgetSetup("painmagnet") end
         return inst
     end
+
+    inst:AddTag("structure")
+    inst:AddTag("container")
+
+    inst:AddComponent("inspectable")
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(PAINMAGNET_HEALTH)

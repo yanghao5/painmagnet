@@ -29,12 +29,13 @@ function widgetcreation(widgetanimbank, widgetpos, slot_x, slot_y, posslot_x, po
         },
         type = "chest",
         itemtestfn = function(container, item, slot) 
-            if item.components.edible then
-               if  item.components.edible.foodtype == FOODTYPE.MEAT or item.components.edible.foodtype==FOODTYPE.VEGGIE then
-                    return true
-                end
-            end
-            return false
+            --if item.components.edible then
+            --    if  item.components.edible.foodtype == FOODTYPE.MEAT or item.components.edible.foodtype==FOODTYPE.VEGGIE then
+            --         return true
+            --     end
+            --    return true
+            --end
+            return true
         end
     }
     

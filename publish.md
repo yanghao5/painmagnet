@@ -16,9 +16,6 @@ It is especially useful for solo players, particularly when playing as Walter.
       - Note: The frequency is very fast, so I recommend adjusting it to 0
 [/list]
 
-[i]Note: PM currently cannot attract the aggro of shadow creatures.[/i]
-[i]Note: Pain Magnet is in an early experimental stage and may contain bugs.[/i]
-
 [b]Report Bugs[/b]
 You can report bugs in the comments or by opening a GitHub issue.
 [url=https://github.com/yanghao5/painmagnet/issues]https://github.com/yanghao5/painmagnet/issues[/url]

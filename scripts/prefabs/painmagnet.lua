@@ -7,15 +7,14 @@ local itemassets = {
     Asset("IMAGE", "images/inventoryimages/inventoryicon.tex")
 }
 local assets = {
-    Asset("ANIM", "anim/painmagnet.zip"),
-    Asset("ANIM", "anim/ui_chest_4x5.zip")
+    Asset("ANIM", "anim/painmagnet.zip"), Asset("ANIM", "anim/ui_chest_4x5.zip")
 }
 
 local PAINMAGNET_HEALTH = GetModConfigData("pm_hp", KnownModIndex:GetModActualName("Pain Magnet"))
 local PAINMAGNET_REGEN = 1
-local PAINMAGNET_RANGE = GetModConfigData("pm_range", KnownModIndex:GetModActualName("Pain Magnet"))
-local PAINMAGNET_DAMAGE = GetModConfigData("pm_attack", KnownModIndex:GetModActualName("Pain Magnet"))
-local PAINMAGNET_FOOD_HEAL_RATIO = GetModConfigData("pm_food_ratio", KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_RANGE = GetModConfigData("pm_range",KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_DAMAGE = GetModConfigData("pm_attack",KnownModIndex:GetModActualName("Pain Magnet"))
+local PAINMAGNET_FOOD_HEAL_RATIO = GetModConfigData("pm_food_ratio",KnownModIndex:GetModActualName("Pain Magnet"))
 local PAINMAGNET_ATTACK_PERIOD = 0.2
 local PAINMAGNET_DAMAGE_REDUCTION = 0.3
 
@@ -44,9 +43,7 @@ local function itemfn()
     inst.AnimState:PlayAnimation("idle")
 
     inst.entity:SetPristine()
-    if not TheWorld.ismastersim then
-        return inst
-    end
+    if not TheWorld.ismastersim then return inst end
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
@@ -61,28 +58,27 @@ local function itemfn()
     return inst
 end
 
-local AGGRO_MUST_TAGS = { "_combat" }
-local AGGRO_CANT_TAGS = { "INLIMBO", "player", "eyeturret", "engineering","beehive","hive","spiderden" }
+local AGGRO_MUST_TAGS = {"_combat"}
+local AGGRO_CANT_TAGS = {"INLIMBO", "player", "companion", "eyeturret", "engineering", "beehive","hive", "spiderden"}
+local AGGRO_ONEOF_TAGS = {"brightmare", "lunar_aligned", "shadow_aligned", "shadow","locomotor", "epic", "NPCcanaggro"}
 -- painmagnet AttractAggro()
 local function AttractAggro(inst)
     print("Starting aggro task.")
-    if not inst.components.combat then
-        return
-    end
+    if not inst.components.combat then return end
 
     local x, y, z = inst.Transform:GetWorldPosition()
     local range = PAINMAGNET_RANGE or 15
 
-    local ents = TheSim:FindEntities(x, y, z, range, AGGRO_MUST_TAGS, AGGRO_CANT_TAGS)
+    local ents = TheSim:FindEntities(x, y, z, range, AGGRO_MUST_TAGS,AGGRO_CANT_TAGS,AGGRO_ONEOF_TAGS)
     for i, v in ipairs(ents) do
-        if v:IsValid() and v.components.combat and inst.components.combat:CanTarget(v) then
+        if v:IsValid() and v.components.combat and
+            inst.components.combat:CanTarget(v) then
             v.components.combat:GiveUp()
             v.components.combat:SetTarget(inst)
             v.components.health:DoDelta(-PAINMAGNET_DAMAGE, nil, "painmagnet")
         end
     end
 end
-
 
 local function StartAggroTask(inst)
     local period = PAINMAGNET_ATTACK_PERIOD or 5
@@ -119,9 +115,17 @@ local function fn()
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
-        inst.OnEntityReplicated = function(inst) inst.replica.container:WidgetSetup("painmagnet") end
+        inst.OnEntityReplicated = function(inst)
+            inst.replica.container:WidgetSetup("painmagnet")
+        end
         return inst
     end
+
+    inst:AddTag("largecreature")
+    inst:AddTag("companion")
+    inst:AddTag("soulless")
+    inst:AddTag("crazy")
+    inst:AddTag("bigbernie")
 
     inst:AddTag("structure")
     inst:AddTag("container")
@@ -170,7 +174,8 @@ local function fn()
         for _, item in ipairs(items) do
             if item.components.edible and item.components.edible.hungervalue then
                 if item.components.edible.hungervalue > 0 then
-                    total_hunger = total_hunger + PAINMAGNET_FOOD_HEAL_RATIO*item.components.edible.hungervalue
+                    total_hunger = total_hunger + PAINMAGNET_FOOD_HEAL_RATIO *
+                                       item.components.edible.hungervalue
                 end
             end
 
@@ -180,7 +185,8 @@ local function fn()
 
         local current_health = inst.components.health.currenthealth
         local max_health = inst.components.health.maxhealth
-        local new_health = math.min(current_health + total_hunger * 10, max_health) -- 确保不超过最大血量
+        local new_health = math.min(current_health + total_hunger * 10,
+                                    max_health) -- 确保不超过最大血量
         inst.components.health:SetCurrentHealth(new_health)
         inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_close")
     end
@@ -196,5 +202,5 @@ local function fn()
 end
 
 return Prefab("painmagnet_item", itemfn, itemassets),
-    Prefab("painmagnet", fn, assets),
-    MakePlacer("painmagnet_placer", "painmagnet", "painmagnet", "idle")
+       Prefab("painmagnet", fn, assets),
+       MakePlacer("painmagnet_placer", "painmagnet", "painmagnet", "idle")
